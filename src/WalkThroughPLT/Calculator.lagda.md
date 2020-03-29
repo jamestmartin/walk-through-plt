@@ -30,7 +30,7 @@ This may be too limited to be a useful calculator so far, but we will be teachin
 ```agda
 open import Agda.Builtin.Equality using (_≡_; refl)
 open import Data.Nat using (ℕ; _+_; _×_; _↑_)
-open import Data.Product using (Σ; _,_) renaming (_×_ to _××_)
+open import Data.Product using (Σ; _,_) renaming (_×_ to _∧_)
 open import Data.Unit using (⊤)
 open import System.IO using (IO; forever; _<&>_; _>>=_)
 
@@ -76,63 +76,124 @@ We can already do that to some extent, but it is, like doing arithmetic by hand,
 You probably already see how I put together each simple operation to (manually) calculate the value of `3^3 + 2*(3^2) + 2*3 + 1`.
 Let's be a bit more precise about what I did.
 
-The calculator takes in *two* numbers and an operation (which I will refer to as an **expression**) and gives us *one* number.
-Many expressions will give us the same number as an output;
-for example, `2 + 2`, `2 * 2`, and `2 ^ 2` all give us `4`.
-Another way of saying `2 * 2` gives us `4` is to say that `2 * 2` **reduces to** 4. "Gives us" and "reduces to" both mean the same thing.
-I will refer to any two expressions that give the same number as output **joinable**, e.g. `2 + 2` is joinable to `2 * 2` because they reduce to 4.
+First, some definitions:
+* **Expressions**: Something you can ask the calculator to calculate. Right now, these consist of two numbers and an operator (e.g. `2`, `3`, and `+` can be made into the expression `2 + 3`).
+* **Reduction**: When you give the calculator an expression as input, it gives you back a number. We say that the expression (e.g. `3 * 2`) *reduces to* that number (e.g. `6`), e.g. `3 * 2` *reduces to* `6`.
+  * We also may use the symbol `e ↦ n` ("maplet", read "`e` reduces to `n`"; TeX: `\mapsto`, Agda: `\r6`), e.g. `3 * 2 ↦ 6`.
 ```agda
-  -- `e` reduces to `n` if `calculate e` equals `n`
-  ReducesTo : Expression → ℕ → Set
-  ReducesTo e n = calculate e ≡ n
-
-  -- `e` is joinable to `e′` if there exists some `n` such that both `e` and `e′` reduce to `n`.
-  _↓_ : Expression → Expression → Set
-  _↓_ e e′ = Σ λ (n : ℕ) → ReducesTo e n ×× ReducesTo e′ n
-
-  2+2↓2*2 : add 2 2 ↓ mult 2 2
-  2+2↓2*2 = 4 , (refl , refl)
+  _↦_ : Expression → ℕ → Set
+  e ↦ n = calculate e ≡ n
 ```
 
-We currently have the simple concept that an expression reduces to a number.
-However, restricting our concepts of expression and reduction to just what the calculator can do so far is very limiting.
-*We* know that there are more complex things you can do with addition and multiplication than just `1 + 2` and `2 * 2`, but the *calculator* doesn't.
-By restraining our ideas of expression and reduction to just what the calculator already does, we are limiting ourselves.
+Make note of these properties of reduction:
+1. Every expression reduces to some number, or in other words, there are no expressions that don't reduce to any number.
+2. Every expression *only* reduces to *one* number (e.g. `2 + 2` reduces to `4`, and never anything else, like, say, `5`), but *many* expressions may reduce to the *same* number (e.g. `1 + 1` reduces to `2`, and so does `2 * 1`).
+```agda
+  ↦-exists : (e : Expression) → Σ λ (n : ℕ) → e ↦ n
+  ↦-exists e = calculate e , refl
 
-Expanding beyond the world of the calculator, we can say that numbers themselves are expressions.
-An expression is now either an operator applied to two numbers, or a number.
-Now, our expressions can look like `1`, `1932 + 2`, `15`, `12 * 2`, and so forth.
-We also defined reduction in terms of "whatever the calculator would do",
-so we'll have to decide upon what number a *number* should reduce to: a number reduces to itself.
-Our definition of joinability can remain the same: two expressions are joinable if they both reduce to the same number.
-However, we get new examples of joinable expressions, for example: `2 * 2` is joinable to `4` because `2 * 2` reduces to 4 (because the calculator says so) and `4` reduces to `4` (because we say so),
-and likewise that `4` is joinable to `2 + 2`, and even `4` is joinable to `4`.
+  isUnique : Set → Set
+  isUnique A = Σ λ (x : A) → (y : A) → x ≡ y
+
+  ↦-unique : (e : Expression) → isUnique (Σ λ (n : ℕ) → e ↦ n)
+  ↦-unique e = ↦-exists e , λ { (.(calculate e) , refl) → refl }
+```
+
+We can take advantage of that second property to define something new: **equivalence**.
+If `e₁` reduces to `n` and `e₂` *also* reduces to `n`, then we say that `e₁` is *equivalent to* `e₂`.
+We also use the symbol `e₁ ≡ e₂` ("triple bar", read "`e₁` is equivalent to `e₂`"; TeX: `\equiv`).
+A few examples:
+* `1 + 1` reduces to `2` and `2 * 1` reduces to `2`, therefore `1 + 1` is equivalent to `2 * 1` (`1 + 1 ↦ 2` and `2 * 1 ↦ 2`, therefore `1 + 1 ≡ 2 * 1`).
+* `2 ^ 2` reduces to `4` and `2 * 2` reduces to `4`, therefore `2 ^ 2` is equivalent to `2 * 2` (`2 ^ 2 ↦ 4` and `2 * 2 ↦ 4`, therefore `2 ^ 2 ≡ 2 * 2`).
+```agda
+  -- We're already using _≡_ to represent the identity type.
+  _==_ : Expression → Expression → Set
+  e₁ == e₂ = Σ λ (n : ℕ) → e₁ ↦ n ∧ e₂ ↦ n
+
+  ex==₁ : add 1 1 == mult 2 1
+  ex==₁ = 2 , (lemma₁ , lemma₂)
+    where lemma₁ : add 1 1 ↦ 2
+          lemma₁ = refl
+
+          lemma₂ : mult 2 1 ↦ 2
+          lemma₂ = refl
+
+  ex==₂ : exp 2 2 == mult 2 2
+  ex==₂ = 4 , (lemma₁ , lemma₂)
+    -- Fun fact: I actually managed to catch a bug while writing this proof, because I had accidentally defined `2 ^ 2 ↦ 5`!
+    where lemma₁ : exp 2 2 ↦ 4
+          lemma₁ = refl
+
+          lemma₂ : mult 2 2 ↦ 4
+          lemma₂ = refl
+```
+
+Equivalence also has a few useful properties:
+* **Reflexitivity**: `e` is always equivalent to `e`, for any expression (`e ≡ e`).
+* **Symmetry**: If an expression `e₁` is equivalent to `e₂`, then `e₂` is equivalent to to `e₁` (if `e₁ ≡ e₂`, then `e₂ ≡ e₁`).
+* **Transitivity**: If `e₁` is equivalent to `e₂` and `e₂` is equivalent to `e₃`, then `e₁` is equivalent to `e₃` (if `e₁ ≡ e₂` and `e₂ ≡ e₃`, then `e₁ ≡ e₃`).
+```agda
+  variable e e₁ e₂ e₃ : Expression
+
+  ==-reflexive : e == e
+  ==-reflexive {e} = calculate e , (refl , refl)
+
+  ==-symmetric : e₁ == e₂ → e₂ == e₁
+  ==-symmetric (n , (p₁ , p₂)) = n , (p₂ , p₁)
+
+  ==-transitive : e₁ == e₂ → e₂ == e₃ → e₁ == e₃
+  ==-transitive {e₂ = e₂} p₁ p₂ with calculate e₂
+  ==-transitive {e₂ = e₂} (.n , (pe₁ , refl)) (.n , (refl , pe₃)) | n = n , (pe₁ , pe₃)
+```
+
+This idea of equivalence is very similar to the equality that you're used to from arithmetic.
+In fact, every expression we consider equivalent would be consider equal;
+just as `2 * 2` is equivalent to `4 ^ 1`, `2 * 2` is equal to `4 ^ 1`.
+However, there are many things that we would consider equal that are not equivalent, for example:
+* `2 * 2 = 4`, but we can't say that `2 * 2 ≡ 4` because equivalence is defined between *expressions*, and numbers are not expressions.
+* `(1 + 1) * 2 = 2 * 2`, but we can't say that `(1 + 1) * 2 ≡ 2 * 2` because `(1 + 1) * 2` is not an expression.
+
+This is because we're restricting our idea of expressions to "things the calculator understands as input".
+We *want* to be able to say that `3^3 + 2*(3^2) + 2*3 + 1 ≡ 52`, but we can't because the calculator doesn't understand either of those things.
+However, to save ourselves from that tedious and error-prone arithmetic, we want to still use the calculator whenever possible.
+We can do this by breaking down `3^3 + 2*(3^2) + 2*3 + 1` into things the calculator *does* understand, and then putting them back together ourselves.
+
+We'll begin by describing what `52` means in `3^3 + 2*(3^2) + 2*3 + 1 ≡ 52`.
+First, we know that `≡` is between expressions, so we'll first have to upgrade our idea of expressions.
+1. Everything that used to be an expression is still an expression.
+2. Numbers are also now expressions.
+
+Next, we know that two expressions are equal if they reduce to the same number, but we've only defined what reduction means on our *old* idea of expressions.
+Again, we'll have to upgrade our idea of reduction.
+1. If an expression used to reduce to a number, it still reduces to that same number.
+2. Our new expressions, the numbers, reduce to themselves (`n ↦ n′` only if `n` and `n′` are exactly the same).
 ```agda
   data Expression′ : Set where
-    -- An expression is now either an expression as it was defined before ...
+    -- TODO: Do I want to bring up the (subtle) distinction between `52` and `# 52`?
+    #_ : ℕ → Expression′
     expr : Expression → Expression′
-    -- ... or a number.
-    lit : ℕ → Expression′
+  infix 5 #_
 
-  ReducesTo′ : Expression′ → ℕ → Set
-  ReducesTo′ (lit n) n′ = n ≡ n′
-  ReducesTo′ (expr e) n = ReducesTo e n
+  _↦′_ : Expression′ → ℕ → Set
+  (# x)  ↦′ n = x ≡ n
+  expr x ↦′ n = x ↦ n
 
-  _↓′_ : Expression′ → Expression′ → Set
-  e ↓′ e′ = Σ λ (n : ℕ) → ReducesTo′ e n ×× ReducesTo′ e′ n
-
-  2*2↓′2+2 : expr (mult 2 2) ↓′ expr (add 2 2)
-  2*2↓′2+2 = 4 , (refl , refl)
-
-  2*2↓′4 : expr (add 2 2) ↓′ lit 4
-  2*2↓′4 = 4 , (refl , refl)
-
-  4↓′2+2 : lit 4 ↓′ expr (mult 2 2)
-  4↓′2+2 = 4 , (refl , refl)
-
-  4↓′4 : lit 4 ↓′ lit 4
-  4↓′4 = 4 , (refl , refl)
+  infix 2 _==′_
+  -- This is exactly the same as before, just upgraded to our new idea of `↦` (i.e. `↦′`).
+  _==′_ : Expression′ → Expression′ → Set
+  e₁ ==′ e₂ = Σ λ (n : ℕ) → e₁ ↦′ n ∧ e₂ ↦′ n
 ```
+We can now say things like `52 ≡ 52` or `26 * 2 = 52`.
+```agda
+  ex==₃ : # 52 ==′ # 52
+  ex==₃ = 52 , (refl , refl)
+
+  ex==₄ : # 26 × 2 ==′ # 52
+  ex==₄ = 52 , (refl , refl)
+```
+
+Now we have to describe what `3^3 + 2*(3^2) + 2*3 + 1` means in `3^3 + 2*(3^2) + 2*3 + 1 ≡ 52`.
+Again, we'll need to upgrade our idea of expressions.
 
 There's one last way we're going to extend the concept of expressions (for now).
 Expressions are made of numbers or operations applied to numbers,
@@ -177,7 +238,7 @@ Some properties:
    * this isn't actually strictly necessary for substitution as a whole; it's just why we want to do it in this *particular way*
       * by introducing this now, we're introducing reduction strategies a lot earlier than we'd want to
 
-When two expressions are joinable, you can replace one with the other as a subexpression and get exactly the same result. (TODO: referential transparency, again)
+When two expressions are equal, you can replace one with the other as a subexpression and get exactly the same result. (TODO: the substitution property, referential transparency, again)
 The act of replacing a subexpression with an equivalent expression is called **substitution** (TODO: IPA).
 
 Because 48 is a lot easier to type than `40 + (2 * 4)`, you're probably going to want to do that.

@@ -9,4 +9,4 @@ open import Agda.Builtin.Nat
 -- | Exponentiation
 _↑_ : ℕ → ℕ → ℕ
 b ↑ Z   = 1
-b ↑ S e = b + (b ↑ e)
+b ↑ S e = b × (b ↑ e)
