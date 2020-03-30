@@ -2,21 +2,95 @@
 These are some ideas I have for things I would like to add to the book.
 *This is just brainstorming.* This list isn't sorted, and very little thought has gone into whether any given concept should be included or not.
 
+## Outline
+1. programming languages
+   * theory naturally progresses into mathematics (and physics?)
+   * ??? naturally progresses into linguistics?
+      * linguistics and physics are observational, whereas PLT and mathematics are more pure
+   * implementation naturally progresses into operating systems
+2. CPUs & operating systems
+3. networks
+4. video games
 
-* lambda calculus
+Reading this book should be a *constant*, but evenly-paced struggle.
+It will be difficult to understand, but as soon as you know it, it'll all seem incredibly obvious.
+
+### Programming Languages
+--- theory
+1. Computation: The precise semantics of various models of computation.
+2. Types: The relationship between programs and proofs.
+3. Abstractions: Abstractions at a higher level than TT, library design.
+
+--- practice
+4. Design: How can I categorize languages? Why should I pick one over any other? DSLs? How do I pick syntax? the pragmatics of programming languages
+5. Implementation: Parsers, interpreters, compilers, JITs, virtual machines, runtimes
+6. Tooling: IDEs, formatters, package managers (specialized source control, structural editors?), proof assistance?
+
+## ~~Lambda Calculus~~
+### ~~What is the lambda calculus?~~
+1. Lambda calculus is defined in terms of higher-order anonymous functions.
+   * I should describe first-order, named, multi-parameter functions first.
+      * The idiom that allows multiple arguments in LC is dependent on the ability to *return* functions, which seems in some ways separate from the ability to accept functions as arguments.
+      * Anonymous functions aren't all that useful compared to named functions without higher-order functions, in particular when they're not needed to emulate `let`.
+   * Really it doesn't make sense to jump directly from functions to the lambda calculus at all. I should work with inductive data types first and recursive functions.
+      * I don't even need to go directly to full inductive data types with recursion. Non-recursive data types will be sufficient at first. Not to mention I won't need type parameters yet...
+        * TODO: Interection types plus bags of atoms vs. structured case? Is this basically sets vs. types?
+      * Recursive functions should probably defined in terms of some sort of "magic letrec" before going for a fixpoint operator.
+      * Even second-order functions should be introduced before higher-order functions. True higher-order functions are *extremely rare*, and only really relevant for encoding data. This should be introduced only as an advanced concept.
+2. Functions are defined in terms of substitution (which can be built-in as `let` expressions).
+3. Substitution requires the substitution property.
+   * How? I believe this is true, but I need to figure out the connection more precisely.
+4. The substitution property is dependent on the idea of equality.
+5. The idea of equality is dependent on the idea of equivalence *and* the idea of subexpressions.
+6. So I need to define equivalence, which requires the idea of reduction...
+7. Which itself requires the idea of expressions, which have to be defined *recursively* so I have a notion of subexpressions.
+8. So although I don't need to explain recursive data and induction *yet*, I need it to be understandable at least for expressions.
+
+### Beyond that...
+The computation is more fundamental than the types. Type theory feels seriously overemphasized. *The types are just annotations that get stripped away* (even typeclasses are just implicit parameters, although types *are* necessary to meaningfully infer them).
+It doesn't help that I'm trying to build up *computational* ideas. Types *limit* computational ideas. That's the opposite of what I want. I'll add types after I explain the computation.
+
+#### More *computational* ideas
+* records, enums
+* recursion, mutual recursion
+   * induction and co-induction? structural recursion? is this relevant yet?
+* effects
+   * these break substitution, so the return value (data) and the effects (computation) are separate
 * prescence of bottoms: http://blog.ezyang.com/2010/12/hussling-haskell-types-into-hasse-diagrams/
    * partial functions vs. total functions
+   * types: infinite loops, untyped lambda calculus "type errors"
+     * Would this be a good introduction to the idea of types? it removes bottoms?
+     * Are there other types? IIRC there's some kind of type theory paradox that doesn't even need recursion.
 * fixpoints
-* (co)effect systems
-   * monadic IO, uniqueness types
 * continuations, delimited continuations
-   * relationship to law of excluded middle
+   * relationship to law of excluded middle-- though this part should probably wait until I get to "propositions as some types"
 * call-by-name, call-by-value, call-by-push-value
    * strictness vs. eagerness
    * laziness
    * might be a good introduction for data vs. codata. infinity related to fixpoints?
 * various kinds of normal forms
-* untyped lambda calculus "type errors"
+* linear terms
+  * information-conserving terms
+  * ordered terms
+  * interaction nets
+  * relationship to process calculi? (and the idea of process calculi in general)
+* combinators
+   * as a model of computation?
+   * speaking of which, will I ever involve turing machines?
+* the computational meaning of univalence?
+   * I don't think this makes sense without types. How else would the interpreter know where to substitute?
+* modules systems (that one paper with agda packageinfo?)
+
+* strong normalization
+* confluence
+* referential transparency
+* purity
+* total functions
+
+* macros, fexprs: lisp-like and TH-like?
+  * relationship to rebindable syntax. is that like an unhygienic macro, or typeclass?
+
+## Types
 * simple, polymorphic, type constructors, dependent types
    * insanely dependent types?
 * inductive, coinductive types
@@ -24,35 +98,19 @@ These are some ideas I have for things I would like to add to the book.
    * mutally recursive types
 * linear types (incl. relevant/affine), ordered types
    * classical linear logic
-* conservation of information
-   * quantum computing
-* univalence, higher-inductive types, HoTT
-   * and OTOH, axiom K
-* identity types
-* module systems (that one paper with agda packageinfo?)
 * type inference
    * restricting types to those which can be inferred (e.g. HM) vs. allowing imperfect inference (not the most general type)
 * value inference
    * automatic typeclass deriving
+* univalence, higher-inductive types, HoTT
+   * and OTOH, axiom K
 * type of types, kinds
 * type universes, level/universe polymorphism, cumulativity
    * russell vs. tarski universes?
 * pattern matching, copatterns
 * subtyping
 * iso/equirecursive types
-
-* typeclasses
-   * contrast to logic programming systems (e.g. prolog), and mercury
-   * contrast to similar code written using dependent types?
-   * postulates related to nullary type classes?
-* monad comprehensions with parallel/sql-like/generalized? applicative do?
-   * ideally with some kind of macros!
-
-* strong normalization
-* confluence
-* referential transparency
-* purity
-* total functions
+* identity types
 
 * impredicativity?
 * higher-rank types?
@@ -66,16 +124,6 @@ These are some ideas I have for things I would like to add to the book.
 * static vs. dynamic, explicit vs. implicit
 * axioms
 
-* macros, fexprs: lisp-like and TH-like?
-  * relationship to rebindable syntax. is that like an unhygienic macro, or typeclass?
-* tactics
-* pattern synonyms
-* syntax extensions
-* reflection
-
-* process calculi
-* separation logic
-
 * strict control over computational/space complexity
 
 * sized types, guardedness?
@@ -87,6 +135,26 @@ These are some ideas I have for things I would like to add to the book.
   * flat modality??
   * spacial/crisp type theory??
 * pure type systems?
+
+## Unorganized
+* (co)effect systems
+   * monadic IO, uniqueness types
+* conservation of information
+   * quantum computing
+* typeclasses
+   * contrast to logic programming systems (e.g. prolog), and mercury
+   * contrast to similar code written using dependent types?
+   * postulates related to nullary type classes?
+   * relationship to implicit parameters
+* monad comprehensions with parallel/sql-like/generalized? applicative do?
+   * ideally with some kind of macros!
+
+* tactics
+* pattern synonyms
+* syntax extensions
+* reflection
+
+* separation logic
 
 late-game:
 * category theory
@@ -274,10 +342,3 @@ order:
       * truncated subtraction, i.e. become zero
       * difference subtraction, i.e. absolute value of the integer result
       * related: two representations of integers? (three including built-in, even more incl. functions, infinite theoretically)
-
-
-
-
-
-stuff for the calculator:
-* what is an expression, reduction, normal form, joinability, Church-Rosser property
