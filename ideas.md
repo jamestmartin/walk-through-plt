@@ -2,53 +2,11 @@
 These are some ideas I have for things I would like to add to the book.
 *This is just brainstorming.* This list isn't sorted, and very little thought has gone into whether any given concept should be included or not.
 
-## Outline
-1. programming languages
-   * theory naturally progresses into mathematics (and physics?)
-   * ??? naturally progresses into linguistics?
-      * linguistics and physics are observational, whereas PLT and mathematics are more pure
-   * implementation naturally progresses into operating systems
-2. CPUs & operating systems
-3. networks
-4. video games
-
 Reading this book should be a *constant*, but evenly-paced struggle.
 It will be difficult to understand, but as soon as you know it, it'll all seem incredibly obvious.
 
-### Programming Languages
---- theory
-1. Computation: The precise semantics of various models of computation.
-2. Types: The relationship between programs and proofs.
-3. Abstractions: Abstractions at a higher level than TT, library design.
-
---- practice
-4. Design: How can I categorize languages? Why should I pick one over any other? DSLs? How do I pick syntax? the pragmatics of programming languages
-5. Implementation: Parsers, interpreters, compilers, JITs, virtual machines, runtimes
-6. Tooling: IDEs, formatters, package managers (specialized source control, structural editors?), proof assistance?
-
 ## ~~Lambda Calculus~~
 ### ~~What is the lambda calculus?~~
-1. Lambda calculus is defined in terms of higher-order anonymous functions.
-   * I should describe first-order, named, multi-parameter functions first.
-      * The idiom that allows multiple arguments in LC is dependent on the ability to *return* functions, which seems in some ways separate from the ability to accept functions as arguments.
-      * Anonymous functions aren't all that useful compared to named functions without higher-order functions, in particular when they're not needed to emulate `let`.
-   * Really it doesn't make sense to jump directly from functions to the lambda calculus at all. I should work with inductive data types first and recursive functions.
-      * I don't even need to go directly to full inductive data types with recursion. Non-recursive data types will be sufficient at first. Not to mention I won't need type parameters yet...
-        * TODO: Interection types plus bags of atoms vs. structured case? Is this basically sets vs. types?
-      * Recursive functions should probably defined in terms of some sort of "magic letrec" before going for a fixpoint operator.
-      * Even second-order functions should be introduced before higher-order functions. True higher-order functions are *extremely rare*, and only really relevant for encoding data. This should be introduced only as an advanced concept.
-2. Functions are defined in terms of substitution (which can be built-in as `let` expressions).
-3. Substitution requires the substitution property.
-   * How? I believe this is true, but I need to figure out the connection more precisely.
-4. The substitution property is dependent on the idea of equality.
-5. The idea of equality is dependent on the idea of equivalence *and* the idea of subexpressions.
-6. So I need to define equivalence, which requires the idea of reduction...
-7. Which itself requires the idea of expressions, which have to be defined *recursively* so I have a notion of subexpressions.
-8. So although I don't need to explain recursive data and induction *yet*, I need it to be understandable at least for expressions.
-
-### Beyond that...
-The computation is more fundamental than the types. Type theory feels seriously overemphasized. *The types are just annotations that get stripped away* (even typeclasses are just implicit parameters, although types *are* necessary to meaningfully infer them).
-It doesn't help that I'm trying to build up *computational* ideas. Types *limit* computational ideas. That's the opposite of what I want. I'll add types after I explain the computation.
 
 #### More *computational* ideas
 * records, enums
@@ -244,22 +202,6 @@ alternative models of computation:
    * in forth, this is by *necessity*. composition is the most primitive operation. functions *must* be written so that they compose well.
 
 
-every single part comes with
-* strong motivating examples for a programmer
-* clear, concrete explanations
-* formal verification of every statement made
-* an executable implementation that you can play with, *right now*
-* citations to previous work, useful links
-* exercises?
-* pronunciation guides
-   * input method guides for special characters
-
-the book should be dense, but *self-contained*.
-
-
-fuck it, let it serve as an introduction to programming *in general*.
-
-
 
 side projects
 * scheme, but better
@@ -368,53 +310,3 @@ order:
 
 ## Examples
 univalence: I want to do math on unary numbers, but implement them as faster bitvectors?
-
-## History and Culture
-Although history can be boring if over-emphasized, and history definitely isn't the point of this book
-(not to mention I don't know much about the history because I haven't been around very long),
-I still believe it would be valuable to cover when I see the chance.
-
-It would also be valuable to describe many famous figures in the field. (e.g. those who are universally known by even just a few letters)
-(and of course I should thank those "lesser" figures who have contributed, both in person and by e.g. their own work)
-
-I need to cover notation beyond the notation that I'm going to be using personally, so that people will actually be able to understand other peoples' articles and papers.
-
-Finally, if I could capture any valuable parts of PLT culture, that would be good.
-To be honest, I don't really know what PLT culture would *mean* though.
-I think at the very least some jokes (like I'm accumulating in the Jokes section) would be a good start.
-
-## Stuff
-explains cool features that people are unlikely to be familiar with:
-* substructural type systems
-   * application in Rust
-   * process calculi? multithreading is *hard*, so it'd be good to have a way to think about it
-* fexprs and macros
-   * various approaches to macros
-* continuations, undelimited and delimited
-* codata: how to naturally work with potentially infinite data structures, and use them to find elegant solutions to problems that might otherwise be hard
-* parametric polymorphism, type constructors, and parametric polymorphism *over* type constructors: unfamiliar to C programmers, or even e.g. Java programmers who just never learned it
-* dependent types
-   * for a sufficiently specified type, you have *value* inference
-   * tactics and proof assistants
-* effects and *coeffects*
-* univalence: automatically convert code that uses one abstraction to use another?
-* typeclasses and constraints?
-
-helps with how you reason about things:
-* better recognize invariants of abstractions and what properties they have
-   * even if you're not interested in dealing with it in actual types or writing proofs, it's still useful to think about, and now you have the framework for it
-   * helps you design abstractions and avoid exposing unnecessary implementation details
-   * gives you a vocabulary to use to speak about abstractions (and have them explained to you)
-* more easily design algorithms by more easily recognizing each case that needs to be handled, and dealing with it properly
-* learn to deal with hard problems the functional way: just keep breaking them down into smaller problems until the solution to each small problem is obvious
-* less useful in practice, but hey, now you know how to write proofs and formally verify programs
-   * it's like unit tests, but you know for a fact that it's exhaustive
-      * write better unit tests by knowing which cases and properties to cover!
-* understand covariance and contravariance, a source of gotchas and bugs
-* better understand design principles like LSP (will I cover this?) and methodologies like TDD (because you can write tests that directly correspond with desired properties)
-
-side benefits:
-* you should be able to use functional programming languages now!
-
-social benefits:
-* understand what the cool kids (haskellers and co., lispers, rustaceans) are talking about
