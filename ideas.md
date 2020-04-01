@@ -5,10 +5,7 @@ These are some ideas I have for things I would like to add to the book.
 Reading this book should be a *constant*, but evenly-paced struggle.
 It will be difficult to understand, but as soon as you know it, it'll all seem incredibly obvious.
 
-## ~~Lambda Calculus~~
-### ~~What is the lambda calculus?~~
-
-#### More *computational* ideas
+## More *computational* ideas
 * records, enums
 * recursion, mutual recursion
    * induction and co-induction? structural recursion? is this relevant yet?
@@ -27,6 +24,7 @@ It will be difficult to understand, but as soon as you know it, it'll all seem i
    * strictness vs. eagerness
    * laziness
    * might be a good introduction for data vs. codata. infinity related to fixpoints?
+   * laziness semantics (e.g. optimal is better than lazy is better than strict)
 * various kinds of normal forms
 * linear terms
   * information-conserving terms
@@ -58,7 +56,7 @@ It will be difficult to understand, but as soon as you know it, it'll all seem i
 * linear types (incl. relevant/affine), ordered types
    * classical linear logic
 * type inference
-   * restricting types to those which can be inferred (e.g. HM) vs. allowing imperfect inference (not the most general type)
+   * restricting types to those which can be inferred (e.g. HM) vs. allowing imperfect inference (not the most general type or failing)
 * value inference
    * automatic typeclass deriving
 * univalence, higher-inductive types, HoTT
@@ -108,20 +106,14 @@ It will be difficult to understand, but as soon as you know it, it'll all seem i
    * contrast to similar code written using dependent types?
    * postulates related to nullary type classes?
    * relationship to implicit parameters
-* monad comprehensions with parallel/sql-like/generalized? applicative do?
-   * ideally with some kind of macros!
 
 * tactics
-* pattern synonyms
 * syntax extensions
 * reflection
 
 * separation logic
 
 late-game:
-* category theory
-* optimal evaluation
-   * lazy, fully lazy, completely lazy, optimal (two more? I forgot the thesis)
 * proof nets?
 
 
@@ -170,15 +162,6 @@ part 2:
    * good error messages
    * incremental parsing
 * compilers, formally verified
-   * incremental compilers
-* language servers
-* syntax highlighters
-* optimizations
-* structural editors
-* garbage collection
-* build systems
-* version control systems
-* literate programming
 
 
 alternative models of computation:
@@ -187,11 +170,6 @@ alternative models of computation:
 * cellular automata
 * combinator calculi
    * supercompilation?
-   
-   
-   
-* arcane bullshit like recursion-schemes?
-* why are type-level and value-level programming in Haskell so different?
 
 
 * contravariance is considered kinda weird in pure languages, but is essential to mutability
@@ -251,56 +229,6 @@ notes:
 * a type error is a closed term which is not data but cannot be evaluated further
 
 
-
-
-
-
-order:
-* calculator: the desire is intuitively obvious
-* let expressions: so we don't have to write the same stuff over and over
-* lambda expressions: so we can write our own functions
-   * what exactly has it meant when informally referring to substitution?
-   * compare to traditional functions f(x)
-   * functions with multiple arguments
-* recursive functions
-   * magic letrec
-   * if/then/else vs.
-   * induction
-      * pattern matching
-* higher-order functions: ???
-   * letrec can be expressed as a function
-* natural numbers as functions: ???
-   * addition and multiplication, etc. as functions
-   * when do I bring in induction? how do I represent *them*?
-* non-strictness: ???
-   * infinity is now a valid number
-      * weird fixpoints of other values
-   * eta reduction at some point?
-* types: weirdness sneaking into code:
-   * wtf is the meaning of the fixpoint of id?
-   * wtf does it mean to add a function and a number?
-
-* values are built of constructors, computations are everything else
-
-
-* partiality:
-   * defining division: how to define 0/0
-      * not a very good example
-      * maybe sometimes 0^0 undefined is preferred?
-   * fixpoints: incredibly useful, but not always meaningful
-   * implement part now, finish later
-      * also holes, postulates
-   * square root
-      * sum types: compare partiality to maybe?
-   * can't use maybe if you don't know if the function will return
-      * related to ezyang post? maybe is preferred, but not always possible?
-* product types: define div and rem at the same time
-* sum types:
-   * single definition for subtraction of naturals:
-      * partial subtraction, i.e. throw an error
-      * truncated subtraction, i.e. become zero
-      * difference subtraction, i.e. absolute value of the integer result
-      * related: two representations of integers? (three including built-in, even more incl. functions, infinite theoretically)
 
 ## Jokes
 * a mathematician is a device for turning coffee into theorems

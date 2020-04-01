@@ -48,9 +48,81 @@ I don't think I'm going to present it in this way because the value of lambda ca
 7. Which itself requires the idea of expressions, which have to be defined *recursively* so I have a notion of subexpressions.
 8. So although I don't need to explain recursive data and induction *yet*, I need it to be understandable at least for expressions.
 
+Some older ideas on this topic:
+order:
+* calculator: the desire is intuitively obvious
+* let expressions: so we don't have to write the same stuff over and over
+* lambda expressions: so we can write our own functions
+   * what exactly has it meant when informally referring to substitution?
+   * compare to traditional functions f(x)
+   * functions with multiple arguments
+* recursive functions
+   * magic letrec
+   * if/then/else vs.
+   * induction
+      * pattern matching
+* higher-order functions: ???
+   * letrec can be expressed as a function
+* natural numbers as functions: ???
+   * addition and multiplication, etc. as functions
+   * when do I bring in induction? how do I represent *them*?
+* non-strictness: ???
+   * infinity is now a valid number
+      * weird fixpoints of other values
+   * eta reduction at some point?
+* types: weirdness sneaking into code:
+   * wtf is the meaning of the fixpoint of id?
+   * wtf does it mean to add a function and a number?
+
+more stuff:
+* partiality:
+   * defining division: how to define 0/0
+      * not a very good example
+      * maybe sometimes 0^0 undefined is preferred?
+   * fixpoints: incredibly useful, but not always meaningful
+   * implement part now, finish later
+      * also holes, postulates
+   * square root
+      * sum types: compare partiality to maybe?
+   * can't use maybe if you don't know if the function will return
+      * related to ezyang post? maybe is preferred, but not always possible?
+* product types: define div and rem at the same time
+* sum types:
+   * single definition for subtraction of naturals:
+      * partial subtraction, i.e. throw an error
+      * truncated subtraction, i.e. become zero
+      * difference subtraction, i.e. absolute value of the integer result
+      * related: two representations of integers? (three including built-in, even more incl. functions, infinite theoretically)
+
 ### Outline of Mathematics
+This is basically the type theory chapter, but I'm not restricting myself to just TT.
+1. Introduce all of the type systems I want, and the things inbetween (this section will probably amount to most of the chapter)
+   1. Lambda cube
+   2. Effects systems
+   3. Linear types
+   4. HoTT
+2. Computational trinitarianism/quadrinitarianism
+   * Basically, describe logic and CT in terms of TT?
+   * Comparison to other models like ZFC?
+   * "univalent foundations"
+3. Formal verification and writing proofs, basically "intro to doing math with TT"
+
+This section has the benefit of allowing new features, like:
+* obviously bug-reducing features and type declarations like GADTs
+* value inference
+* typed holes
+* tactics
+* typeclasses, constraint solving
+* ad-hoc polymorphism (multiple dispatch?)
+
+Also include other systems like refinement types?
 
 ### Outline of Abstractions
+This chapter is largely about category theory, but also the kinds of powerful libraries that you can build in languages like Haskell, e.g.
+* recursion schemes
+* lenses
+* functors, monads, comonads
+* honestly I personally don't understand a lot of this stuff. I need to learn more before I can write this chapter.
 
 ### Outline of Implementation
 * Frontend/syntax
@@ -61,8 +133,10 @@ I don't think I'm going to present it in this way because the value of lambda ca
   * Interpreters
     * Optimal evaluators, because they're magic
       * but I can only do this if I get into interaction nets and stuff in theory. otherwise that'd be way too much of a distraction for the purposes of this chapter.
+      * other variations on reduction/evaluation strategy: lazy, fully lazy, completely lazy, optimal (two more? I forgot the thesis)
   * Compilers
     * JITs
+  * Boxed and unboxed types: not relevant to the type theory, but relevant to programmers and implementers for performance
 * Compiler targets
   * Real machines
     * The differences between various real machines
@@ -135,7 +209,28 @@ Anyway, the outline (not really structured enough to be an outline yet):
 * design your standard library
 * how did Haskell end up with this? https://aphyr.com/posts/342-typing-the-technical-interview
   * “Haskell is a dynamically-typed, interpreted language.” in the type system! the type system is kinda like prolog, but worse
+* include *syntactic* features that make life easier without adding any theoretical power to the language, e.g.:
+  * pattern matching (and case), pattern synonyms, guards (and multi-way if), where clauses, view patterns, copatterns
+  * do macros/fexprs belong here instead?
+    * can these other things be implemented with macros in the first place? it seems like that would be the ideal solution.
+      * even if macros aren't allowed in the final language, they could still be a useful way to present syntactic features because they're literally just functions on the AST, which is what sugar is anyway, only it's described *within* the language
+  * list/monad/sql/whatever comprehensions
+  * do/applicative do/fix do/proc syntax
+  * rebindable syntax
+  * syntax for literals (e.g. list syntax, pair syntax, tuple sections), record puns
 
 Maybe even get into meta-explanation stuff like the monad tutorial fallacy?
 
 ### Outline of Tooling
+* continuing to parse in the face of errors
+  * automatic error correction, even
+  * good error messages
+* incremental parsing/compilation/etc
+* IDEs
+  * language servers
+  * syntax highlighting
+  * structural editors
+* literate programming
+* build systems
+  * package managers
+* version control systems
