@@ -1,21 +1,53 @@
 # The Calculator
 ```agda
 module WalkThroughPLT.Calculator where
-
 ```
+Although I am sure you are anxious to jump directly to speaking about all of the new features and tricks PLT can bring you,
+before we can describe new programming language features, we must first describe what we already know.
+In other words, to add features to a programming language, we must first have a programming language to add features to.
+
+It is my goal to get us to a "real" programming language as quickly as possible.
+By "real" I mean one that you could realistically use for programming, even if it is a bit simplistic!
+Our "real" programming language will be rather simplistic, but will include indispensible features like IO and universal computation.
+
 ## The trivial calculator
+```agda
+module Trivial where
+```
 Doing arithmetic by hand can be tedious and error-prone.
 Fortunately, we can enlist the help of a computer to do it for us.
-I have written a simple program which can perform arithmetic.
-When you run it, it will prompt you for input:
-```text
->> 
-```
-Right now, there are only three things you can ask it to do: addition (written `+`), multiplication (written `*`), and exponentiation (written `^`).
+I have written a simple calculator program which can perform three operations: addition (written `+`), multiplication (written `*`), and exponentiation (written `^`).
 Furthermore, it only works on the natural numbers (`0, 1, 2, 3, ...`), not negative numbers or fractions or decimals.
-When you give it input, it will calculate what you asked it to calculate, and tell you the result.
-Afterwards, it will prompt you for input again, until you close the program using `Ctrl-c` (denoted `^C`).
-For example:
+```agda
+  open import Data.Nat using (ℕ; _+_; _×_; _↑_)
+```
+It accepts input in a simple format: a number, followed by an operation, followed by another number.
+I will refer to the things which are valid input to the program as **expressions**.
+```agda
+  data Expression : Set where
+    [_+_] [_*_] [_^_] : ℕ → ℕ → Expression
+```
+
+When you run the calculator, it will prompt you for input.
+When you enter an expression, it will perform the operation that it asked you to perform, and then print the result.
+Finally, you may exit the program at any time using `Ctrl-c` (denoted `^C`, as is convention in Unix-style shells).
+```agda
+  open import Data.Unit using (⊤)
+  open import System.IO using (IO; forever; _<&>_; _>>=_)
+
+  -- These functions are dependent on which platform the program is running on.
+  -- They will be defined later.
+  postulate
+    promptInput : IO Expression
+    printResult : ℕ → IO ⊤
+  
+  performOperation : Expression → ℕ
+  performOperation ([a] op [b]) = doOp op a b
+
+  main : IO ⊤
+  main = promptInput <&> performOperation >>= printResult
+```
+Here is an example of what interacting with the program might look like:
 ```text
 >> 1 + 2
 3
@@ -25,16 +57,21 @@ For example:
 16637097
 >> ^C
 ```
+
+  
+Right now, there are only three things you can ask it to do: 
+Furthermore, it only works on the natural numbers (`0, 1, 2, 3, ...`), not negative numbers or fractions or decimals.
+When you give it input, it will calculate what you asked it to calculate, and tell you the result.
+Afterwards, it will prompt you for input again, until you close the program using `Ctrl-c` (denoted `^C`).
+For example:
+```text
+```
 This may be too limited to be a useful calculator so far, but we will be teaching it new things, and before you know it, it will be able to do just about anything.
 
 ```agda
-open import Agda.Builtin.Equality using (_≡_; refl)
-open import Data.Nat using (ℕ; _+_; _×_; _↑_)
-open import Data.Product using (Σ; _,_) renaming (_×_ to _∧_)
-open import Data.Unit using (⊤)
-open import System.IO using (IO; forever; _<&>_; _>>=_)
+  open import Agda.Builtin.Equality using (_≡_; refl)
+  open import Data.Product using (Σ; _,_) renaming (_×_ to _∧_)
 
-module Trivial where
   data Expression : Set where
     add mult exp : ℕ → ℕ → Expression
 

@@ -61,6 +61,7 @@ It doesn't help that I'm trying to build up *computational* ideas. Types *limit*
    * types: infinite loops, untyped lambda calculus "type errors"
      * Would this be a good introduction to the idea of types? it removes bottoms?
      * Are there other types? IIRC there's some kind of type theory paradox that doesn't even need recursion.
+   * stuff like this allows functional programmers to understand not only total functions, but partial functions
 * fixpoints
 * continuations, delimited continuations
    * relationship to law of excluded middle-- though this part should probably wait until I get to "propositions as some types"
@@ -135,6 +136,9 @@ It doesn't help that I'm trying to build up *computational* ideas. Types *limit*
   * flat modality??
   * spacial/crisp type theory??
 * pure type systems?
+
+* security enforced in the type system
+* the stuff that jon's working on?
 
 ## Unorganized
 * (co)effect systems
@@ -225,6 +229,19 @@ alternative models of computation:
 * cellular automata
 * combinator calculi
    * supercompilation?
+   
+   
+   
+* arcane bullshit like recursion-schemes?
+* why are type-level and value-level programming in Haskell so different?
+
+
+* contravariance is considered kinda weird in pure languages, but is essential to mutability
+
+
+* forth and scheme have a critical value in common: they both value *compositionality*.
+   * in scheme, this is because of the very definition of functions
+   * in forth, this is by *necessity*. composition is the most primitive operation. functions *must* be written so that they compose well.
 
 
 every single part comes with
@@ -342,3 +359,62 @@ order:
       * truncated subtraction, i.e. become zero
       * difference subtraction, i.e. absolute value of the integer result
       * related: two representations of integers? (three including built-in, even more incl. functions, infinite theoretically)
+
+## Jokes
+* a mathematician is a device for turning coffee into theorems
+* a comathematician is a device for turning cotheorems into ffee
+* every nut is a coconut
+* a monad is a monoid in the category of endofunctors
+
+## Examples
+univalence: I want to do math on unary numbers, but implement them as faster bitvectors?
+
+## History and Culture
+Although history can be boring if over-emphasized, and history definitely isn't the point of this book
+(not to mention I don't know much about the history because I haven't been around very long),
+I still believe it would be valuable to cover when I see the chance.
+
+It would also be valuable to describe many famous figures in the field. (e.g. those who are universally known by even just a few letters)
+(and of course I should thank those "lesser" figures who have contributed, both in person and by e.g. their own work)
+
+I need to cover notation beyond the notation that I'm going to be using personally, so that people will actually be able to understand other peoples' articles and papers.
+
+Finally, if I could capture any valuable parts of PLT culture, that would be good.
+To be honest, I don't really know what PLT culture would *mean* though.
+I think at the very least some jokes (like I'm accumulating in the Jokes section) would be a good start.
+
+## Stuff
+explains cool features that people are unlikely to be familiar with:
+* substructural type systems
+   * application in Rust
+   * process calculi? multithreading is *hard*, so it'd be good to have a way to think about it
+* fexprs and macros
+   * various approaches to macros
+* continuations, undelimited and delimited
+* codata: how to naturally work with potentially infinite data structures, and use them to find elegant solutions to problems that might otherwise be hard
+* parametric polymorphism, type constructors, and parametric polymorphism *over* type constructors: unfamiliar to C programmers, or even e.g. Java programmers who just never learned it
+* dependent types
+   * for a sufficiently specified type, you have *value* inference
+   * tactics and proof assistants
+* effects and *coeffects*
+* univalence: automatically convert code that uses one abstraction to use another?
+* typeclasses and constraints?
+
+helps with how you reason about things:
+* better recognize invariants of abstractions and what properties they have
+   * even if you're not interested in dealing with it in actual types or writing proofs, it's still useful to think about, and now you have the framework for it
+   * helps you design abstractions and avoid exposing unnecessary implementation details
+   * gives you a vocabulary to use to speak about abstractions (and have them explained to you)
+* more easily design algorithms by more easily recognizing each case that needs to be handled, and dealing with it properly
+* learn to deal with hard problems the functional way: just keep breaking them down into smaller problems until the solution to each small problem is obvious
+* less useful in practice, but hey, now you know how to write proofs and formally verify programs
+   * it's like unit tests, but you know for a fact that it's exhaustive
+      * write better unit tests by knowing which cases and properties to cover!
+* understand covariance and contravariance, a source of gotchas and bugs
+* better understand design principles like LSP (will I cover this?) and methodologies like TDD (because you can write tests that directly correspond with desired properties)
+
+side benefits:
+* you should be able to use functional programming languages now!
+
+social benefits:
+* understand what the cool kids (haskellers and co., lispers, rustaceans) are talking about

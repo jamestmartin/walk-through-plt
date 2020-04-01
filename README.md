@@ -5,12 +5,11 @@ It begins with simple concepts that people already understand (a calculator that
 and slowly builds it into a real programming language,
 along the way explaining concepts like polymorphism, dependent types, linearity, call/cc, and more.
 
-## What will this book contain?
+## Why this book?
 Every concept explained in the book will include:
-* clear, concrete, self-contained explanations, with examples
-* an executable implementation that you can play with, *right now*
-* a precise explanation and formal verification of every statement made
+* clear, concrete, self-contained explanations
 * strong motivating examples for programmers
+* a executable implementation that you can play with, *right now*
 * IPA pronunciations for new words when they're introduced
 * an explanation of what every new symbol (e.g. Σ) introduced, including:
     * its name (e.g. Sigma (/'sɪg.mʌ/))
