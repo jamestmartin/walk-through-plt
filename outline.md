@@ -25,9 +25,29 @@ The first three chapters are theory; the next three are practice.
 4. Design: How can I categorize languages? Why should I pick one over any other? DSLs? How do I pick syntax? the pragmatics of programming languages
 6. Tooling: IDEs, formatters, package managers (specialized source control, structural editors?), proof assistance?
 
-### Outline of Computation
+Important, but where does it belong?
+* Module systems
+* Macros and fexprs
 
-#### Outline of Lambda Calculus???
+### Outline of Computation
+1. A simple model of computation (similar to lambda calculus)
+2. Effects, coeffects?
+   * Purity, referential transparency
+3. Inductive/coinductive datatypes, ADTs
+4. The rest of the lambda calculus?
+5. Fixpoints, partial functions, totality
+6. Continuations (call/cc), delimited continuations
+7. Linear TT as a way of embedding multiple evaluation strategies
+   * Comparison to CBPV?
+   * Benefits by introducing process calculi semantics?
+   * Classical LL? Is it implementable even?
+   
+Other stuff:
+* At some point I need to cover CBN/CBV and degrees of strictness (maybe?).
+* Macros and fexprs: do they belong in this chapter?
+* Probably *all* of the computational semantics I described in ideas.md belongs here
+
+#### Outline of ~~Lambda Calculus~~
 I don't think I'm going to present it in this way because the value of lambda calculus per se is questionable.
 
 1. Lambda calculus is defined in terms of higher-order anonymous functions.
@@ -101,10 +121,11 @@ This is basically the type theory chapter, but I'm not restricting myself to jus
    2. Effects systems
    3. Linear types
    4. HoTT
-2. Computational trinitarianism/quadrinitarianism
+2. Computational trinitarianism/quadrinitarianism, "propositions as some types"
    * Basically, describe logic and CT in terms of TT?
    * Comparison to other models like ZFC?
    * "univalent foundations"
+   * call/cc = pierce's law
 3. Formal verification and writing proofs, basically "intro to doing math with TT"
 
 This section has the benefit of allowing new features, like:
@@ -217,6 +238,7 @@ Anyway, the outline (not really structured enough to be an outline yet):
   * list/monad/sql/whatever comprehensions
   * do/applicative do/fix do/proc syntax
   * rebindable syntax
+    * is rebindable syntax just a matter of unhygienic macros?
   * syntax for literals (e.g. list syntax, pair syntax, tuple sections), record puns
 
 Maybe even get into meta-explanation stuff like the monad tutorial fallacy?
