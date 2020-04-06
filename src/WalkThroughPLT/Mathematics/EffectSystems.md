@@ -13,3 +13,6 @@ If two effectful statements may be resequenced with no effects, then I call them
 * and in this case: a mutable variable is written once, and then again. the first time the variable is written may be ignored and treated as though it is a pure function assuming the variable is not read between when it is written each time, and there's no multithreaded "volatile" shennanigans going on.
 * effectful statements may swap if they are idempotent (and all but the last one may be deleted)
 * effectful statements may be swapped if they are commutative (e.g. incrementing a variable without reading it), and possibly combined.
+
+Effects are infective: if you define a function which calls another function which has an effect, then your function will also have that *same* effect,
+unless you define the behavior of that effect using `perform` yourself (it bubbles up).
