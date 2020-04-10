@@ -53,6 +53,8 @@ side benefits:
 social benefits:
 * understand what the cool kids (haskellers and co., lispers, rustaceans) are talking about
 
+The book should be written Dale Carnegie style: always compelling, and focusing on what I can do for the reader, never on what *I* want.
+
 ### The kinds of reasons you might be interested in any given thing
 * Actual concrete features: because you can *do* stuff with them
    * but you can't introduce them too quickly, or you'll run into issues with the blub paradox

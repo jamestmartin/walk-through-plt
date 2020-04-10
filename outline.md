@@ -1,5 +1,7 @@
 # Outline
 ## After this book, how would I follow up?
+This is strictly in the realm of pure fantasy.
+
 1. Programming languages
    * theory naturally progresses into mathematics (and physics?)
    * ??? naturally progresses into linguistics?
@@ -15,15 +17,14 @@ Anyway, I'm not going to worry about this right now for obviously reasons.
 Back to this book.
 
 ## Outline of Programming Languages
-There are two halves: theory (PLT), and practice (PLD, implementation, pragmatics of PLs).
-The first three chapters are theory; the next three are practice.
-(Which is not to say the theory lacks practical value; or that the practice of making a PL project is relevant to everyday programmers. If anything, it's the reverse, except for that perhaps making a PL project could potentially be a great example of the ideas I had in the theory book being applied in (some sort of) practice).
-1. Computation: The precise semantics of various models of computation.
-2. Mathematics: The relationship between programs and proofs. With a special focus on type theory and how type systems are valuable to programmers even when not considering propositions as some types.
-3. Abstractions: Abstractions at a higher level than TT, library design. Stuff like category theory, and the ridiculously powerful functional programmer's toolbox, with things like recursion schemes and lenses.
-5. Implementation: Parsers, interpreters, compilers, JITs, virtual machines, runtimes, etc.
-4. Design: How can I categorize languages? Why should I pick one over any other? DSLs? How do I pick syntax? the pragmatics of programming languages
-6. Tooling: IDEs, formatters, package managers (specialized source control, structural editors?), proof assistance?
+The first three chapters about *what* your options are and *why* each one is valuable.
+The next three chapters are about *how* to turn them into a usable programming language.
+1. Computation: What can I make my programming language *do*?
+2. Mathematics: What can I make my compiler do *for me*?
+3. Abstractions: How can I use these new features to more easily write better code?
+4. Design: How can I use what I know to design a useful *tool* for programmers?
+5. Implementation: How can I build my programming language?
+6. Tooling: How can I make my programming language easier to use?
 
 Important, but where does it belong?
 * Module systems
@@ -137,6 +138,10 @@ This section has the benefit of allowing new features, like:
 * ad-hoc polymorphism (multiple dispatch?)
 
 Also include other systems like refinement types?
+
+This section will basically be introduced in terms of "what can I get the type checker/inferencer to do for me?"
+Types need to be introduced not based on what they *forbid* (or permit, relative to what other type systems forbid), but rather based on what they *allow* you to do.
+In particular, this section should be less about "math, but also you get these features", but rather "check out this feature that we used math to get". (e.g.: type inference is logic. types are also logic.)
 
 ### Outline of Abstractions
 This chapter is largely about category theory, but also the kinds of powerful libraries that you can build in languages like Haskell, e.g.
