@@ -20,6 +20,7 @@ It will be difficult to understand, but as soon as you know it, it'll all seem i
 * fixpoints
 * continuations, delimited continuations
    * relationship to law of excluded middle-- though this part should probably wait until I get to "propositions as some types"
+   * https://blog.paralleluniverse.co/2015/08/07/scoped-continuations/
 * call-by-name, call-by-value, call-by-push-value
    * strictness vs. eagerness
    * laziness
@@ -229,6 +230,69 @@ notes:
 * a type error is a closed term which is not data but cannot be evaluated further
 
 
+### Design Ideas
+meta:
+* understand the time investment involved
+* know what the specific purpose of your language is
+  * fun, education, etc, are all perfectly good reasons to make a language
+  * "general purpose" is not a good purpose. You must know, concretely, how your language will be better than previous languages, and 
+* make sure no-one else is already doing what you're doing (this doesn't apply to people making a language for fun/education/etc)
+  * if you're making "a better C"
+* have a process which is open to contribution
+* why your toolchain should be free software (or at the very least open source):
+  * otherwise, if you stop maintaining your project, people will have to re-write their projects in another language
+
+design per se:
+* limit on newness (futhark desert)
+* forwards-compatibility and locality
+  * changing code in one place should not break code elsewhere
+  * adding new features should not break downstream code (e.g. that one chalk article on modalities)
+  * certain kinds of warnings plus `-Werror` can break this
+* limit on breaking changes
+  * time should be spent on writing new code, not upgrading old code to the new version of the language
+  * early on (0.X.Y.Z) more is okay, but prevents adoption
+  * after adoption (X.Y.Z), breaking changes prevent upgrade
+    * even with minor changes: see Python 3 vs Python 2
+    * giving up support for old versions too quickly may cause people to quit using your language
+  * allow a gradual transition (like `import __future__`)
+    * allows incremental bugfixes and testing
+    * reduces the need to commit a ton of time to it
+  * you don't want to get caught with tons of backwards-compatibility stuff to support either
+* limit on changes, generally
+  * people want to *know* their language, so churn can be bad
+  * skills shouldn't go out of date too quickly: idiomatic code ideally will stay idiomatic
+  * this is mostly a social limitation rather than a technical one, assuming backwards-compatibility, but it's something to keep in mind
+
+specific things to avoid:
+* silent failures
+* undefined behavior (... should probably cause errors in debug mode. I like what C3 does here, although generally I'd prefer none at all.)
+
+### Tooling Ideas
+* it's common to write your compiler in your own language, but a bootstrap compiler/interpreter allows easily re-compiling your language
+  * surprisingly rarely necessary, unless you lose all copies of your compiler binary somehow (which would be very bad!)
+  * also allows more trust (that infamous trick where a compiler contains malware which it automatically inserts into new compiler builds)
+  * the bootstrap compiler doesn't have to be *good*, fast, or whatever. You can just build your "real" compiler, then build your real compiler with itself (and get all of the optimizations).
+
+#### Build related
+* reproducible builds
+  * bit-for-bit reproducibility is the ideal
+    * ability to confirm that a binary hasn't been tampered with by re-building it yourself
+  * you want to avoid cases of 'it works on *my* machine'
+    * e.g. with C, the mess of dependencies on system libs
+  * reproducible across: time, OS, architecture, installed packages
+  * not reproducible across: different dependency versions (unless they're dynamically linked, in which case maybe?), compiler versions, compiler options
+    * package locks
+    * compiler options like `-march=native` should be translatable into something that *is* reproducible
+* cross-compilation
+* semantic versioning
+  * *enforce* semantic versioning by the package repository (I don't think I've seen this done in practice, but it ought to be possible in theory)
+* dependency hell
+  * supporting multiple versions of a package simultaneously?
+* discourage packages like left-pad
+  * in practice, it's impossible to verify every package you depend on. You must trust every package you depend on, transitively. The fewer people you implicitly trust, the better.
+    * packages can be taken down (like left-pad), or worse, malware or deliberate bugs can be written into them
+  * only importing the necessary parts of packages to the binary (this isn't a very common feature in real life, but it's something to think about)
+    * ideally only even *compiling* the necessary parts of a package
 
 ## Jokes
 * a mathematician is a device for turning coffee into theorems
